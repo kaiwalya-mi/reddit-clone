@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reddit Clone - Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <h1>Reddit Clone</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                {% if current_user.is_authenticated %}
+                <li><a href="#">Profile</a></li>
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                {% else %}
+                <li><a href="{{ url_for('login') }}">Login</a></li>
+                <li><a href="{{ url_for('register') }}">Register</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <section class="posts">
+            <h2>Recent Posts</h2>
+            {% if posts %}
+                {% for post in posts %}
+                <div class="post">
+                    <h3>{{ post.title }}</h3>
+                    <p class="post-meta">Posted by {{ post.author.username }} in {{ post.community.name }} on {{ post.created_at.strftime('%Y-%m-%d') }}</p>
+                    <div class="post-content">
+                        {{ post.content[:200] }}{% if post.content|length > 200 %}...{% endif %}
+                    </div>
+                    <div class="post-actions">
+                        <a href="#" class="btn">View Post</a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>No posts yet!</p>
+            {% endif %}
+        </section>
+        
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <h3>Popular Communities</h3>
+                <ul>
+                    <li><a href="#">r/programming</a></li>
+                    <li><a href="#">r/technology</a></li>
+                    <li><a href="#">r/science</a></li>
+                    <li><a href="#">r/gaming</a></li>
+                    <li><a href="#">r/movies</a></li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-section">
+                <h3>Create a Post</h3>
+                {% if current_user.is_authenticated %}
+                <a href="#" class="btn btn-primary">New Post</a>
+                {% else %}
+                <p>Please <a href="{{ url_for('login') }}">login</a> to create a post.</p>
+                {% endif %}
+            </div>
+        </aside>
+    </main>
+    
+    <footer>
+        <p>&copy; 2025 Reddit Clone. All rights reserved.</p>
+    </footer>
+</body>
+</html>
